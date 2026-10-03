@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiApp1.ViewModels"
+             x:Class="MauiApp1.Views.StatsPage"
+             Title="Stats">
+    
+    <ContentPage.BindingContext>
+        <vm:WorkoutStatsVM />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20">
+            <Label Text="Пълна статистика" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+
+            <Label Text="{Binding TotalWorkouts, StringFormat='Общо тренировки: {0}'}" />
+            <Label Text="{Binding TotalMinutes, StringFormat='Общо минути: {0}'}" />
+            <Label Text="{Binding AverageMinutes, StringFormat='Средно минути: {0}'}" />
+            <Label Text="{Binding TotalCalories, StringFormat='Общо калории: {0}'}" />
+            <Label Text="{Binding AverageCalories, StringFormat='Средно калории: {0}'}" />
+            <Label Text="{Binding AverageIntensity, StringFormat='Средна интензивност: {0}'}" />
+
+            <Label Text="По тип:" FontAttributes="Bold" />
+
+            <CollectionView ItemsSource="{Binding WorkoutsByType}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <HorizontalStackLayout>
+                            <Label Text="{Binding Key}" WidthRequest="100"/>
+                            <Label Text="{Binding Value}" />
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Виж графика"
+                    BackgroundColor="MediumPurple"
+                    TextColor="White"
+                    Clicked="OnGraphClicked"
+                    Margin="0,20,0,0"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiApp1.ViewModels"
+             x:Class="MauiApp1.Views.WorkoutsPage"
+             x:Name="Workouts">
+
+    <ContentPage.BindingContext>
+        <vm:WorkoutListVM />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <vm:WorkoutStatsVM x:Key="StatsVM" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Добавяне на тренировка" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Entry Placeholder="Име на тренировка" Text="{Binding NewName}" />
+            <Picker Title="Тип тренировка"
+                    ItemsSource="{Binding WorkoutTypes}"
+                    SelectedItem="{Binding SelectedType}" />
+            <Entry Placeholder="Продължителност (минути)" Keyboard="Numeric" Text="{Binding NewDuration}" />
+            <Entry Keyboard="Numeric" Placeholder="Калории (по желание)" Text="{Binding NewCalories}" />
+            <DatePicker Date="{Binding NewDate}" />
+            <Label Text="Интензивност" />
+            <Slider Minimum="0.5" Maximum="2" Value="{Binding NewIntensity}" />
+
+            <Button Text="Добави тренировка" 
+                    BackgroundColor="MediumPurple"
+                    TextColor="White"
+                    Command="{Binding AddWorkoutCommand}" />
+
+            <Button Text="Изчисти всички тренировки"
+                    BackgroundColor="DarkRed"
+                    TextColor="White"
+                    Command="{Binding ClearAllCommand}" />
+
+            <Label Text="Списък с тренировки:" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="{Binding TotalWorkouts, Source={StaticResource StatsVM}, StringFormat='Брой на тренировки: {0}'}" />
+            <CollectionView ItemsSource="{Binding Workouts}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="10" Margin="5" BackgroundColor="MediumPurple">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="20"/>
+                                <Label Text="{Binding Type}" />
+                                <Label Text="{Binding Duration}" />
+                                <Label Text="{Binding Intensity}" />
+                                <Label Text="{Binding Calories}" />
+                                <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" />
+
+                                <Button Text="Изтрий"
+                                        BackgroundColor="DarkRed"
+                                        TextColor="White"
+                                        Command="{Binding Source={x:Reference Workouts}, Path=BindingContext.DeleteWorkoutCommand}"
+                                        CommandParameter="{Binding .}" />
+
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
