@@ -14,17 +14,17 @@ namespace MauiApp1.ViewModels
 {
     public class WorkoutListVM : INotifyPropertyChanged
     {
-        public ObservableCollection<Workout> Workouts { get; set; } = new();
-        public string NewName { get; set; }
+        public ObservableCollection<Workout> Workouts { get; set; } = [];
+        public string NewName { get; set; } 
         public string SelectedType { get; set; } = "Силова";
         public int NewCalories { get; set; }
         public  double NewIntensity { get; set; } = 1;
         public int NewDuration { get; set; }
-        public DateTime NewDate { get; set; } = DateTime.Now;
+        public DateTime NewDate { get; set; }
         public ICommand AddWorkoutCommand { get; }
         public ICommand DeleteWorkoutCommand { get; }
         public ICommand ClearAllCommand { get; }
-        public List<string> WorkoutTypes { get; } = new List<string> { "Силова", "Кардио", "Разтягане" };
+        public List<string> WorkoutTypes { get; } = ["Силова", "Кардио", "Разтягане"];
 
 
 

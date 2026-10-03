@@ -8,9 +8,9 @@ using MauiApp1.Models;
 
 namespace MauiApp1.Services
 {
-    class WorkoutDB
+    public class WorkoutDB
     {
-        private static SQLiteAsyncConnection _database;
+        private static SQLiteAsyncConnection? _database;
 
         public static async Task Init()
         {
@@ -26,25 +26,25 @@ namespace MauiApp1.Services
         public static async Task<List<Workout>> GetWorkoutsAsync()
         {
             await Init();
-            return await _database.Table<Workout>().OrderByDescending(w => w.Date).ToListAsync();
+            return await _database!.Table<Workout>().OrderByDescending(w => w.Date).ToListAsync();
         }
 
         public static async Task AddWorkoutAsync(Workout workout)
         {
             await Init();
-            await _database.InsertAsync(workout);
+            await _database!.InsertAsync(workout);
         }
 
         public static async Task DeleteWorkoutAsync(Workout workout)
         {
             await Init();
-            await _database.DeleteAsync(workout);
+            await _database!.DeleteAsync(workout);
         }
 
         public static async Task ClearAllAsync()
         {
             await Init();
-            await _database.DeleteAllAsync<Workout>();
+            await _database!.DeleteAllAsync<Workout>();
         }
     }
 }

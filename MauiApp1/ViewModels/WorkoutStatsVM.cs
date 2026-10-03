@@ -1,14 +1,15 @@
-﻿using System;
+﻿using MauiApp1.Models;
+using MauiApp1.Services;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MauiApp1.Models;
-using MauiApp1.Services;
 
 namespace MauiApp1.ViewModels
 {
-    public class WorkoutStatsVM : WorkoutListVM
+    public class WorkoutStatsVM : INotifyPropertyChanged
     {
         public int TotalWorkouts { get; set; }
         public int TotalCalories { get; set; }
@@ -18,21 +19,40 @@ namespace MauiApp1.ViewModels
         public double AverageIntensity { get; set; }
         public Dictionary<string, int> WorkoutsByType { get; set; } = new();
 
-        public WorkoutStatsVM()
+        // INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
         {
-            LoadStats();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private async void LoadStats()
+        public WorkoutStatsVM()
         {
-            var workouts = await WorkoutDB.GetWorkoutsAsync();
+            // Start loading stats without using async void. Caller can await InitializeAsync if needed.
+            _ = LoadStatsAsync();
+        }
+
+        private async Task LoadStatsAsync()
+        {
+            var workouts = await WorkoutDB.GetWorkoutsAsync() ?? new System.Collections.Generic.List<Workout>();
 
             TotalWorkouts = workouts.Count;
             TotalCalories = workouts.Sum(w => w.Calories);
-            AverageCalories = Math.Round(workouts.Average(w => w.Calories), 1);
             TotalMinutes = workouts.Sum(w => w.Duration);
-            AverageMinutes = Math.Round(workouts.Average(w => w.Duration), 1);
-            AverageIntensity = Math.Round(workouts.Average(w => w.Intensity), 1);
+
+            if (workouts.Any())
+            {
+                AverageCalories = Math.Round(workouts.Average(w => w.Calories), 1);
+                AverageMinutes = Math.Round(workouts.Average(w => w.Duration), 1);
+                AverageIntensity = Math.Round(workouts.Average(w => w.Intensity), 1);
+            }
+            else
+            {
+                AverageCalories = 0;
+                AverageMinutes = 0;
+                AverageIntensity = 0;
+            }
 
             WorkoutsByType = workouts
                 .GroupBy(w => w.Type)
@@ -48,3 +68,4 @@ namespace MauiApp1.ViewModels
         }
     }
 }
+
